@@ -1,0 +1,43 @@
+name: web_app
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^0.21.0-nullsafety.0
+  google_fonts: ^2.0.0
+  url_launcher: ^6.0.3
+  font_awesome_flutter: ^9.0.0
+  flutter_staggered_grid_view: ^0.3.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+flutter:
+  fonts:
+    - family: HighwayGothic
+      fonts:
+        - asset: assets/fonts/HWYGOTH.TTF
+    - family: HighwayGothicCondensed
+      fonts:
+        - asset: assets/fonts/HWYGCOND.TTF
+    - family: HighwayGothicExpanded
+      fonts:
+        - asset: assets/fonts/HWYGEXPD.TTF
+    - family: HighwayGothicNarrow
+      fonts:
+        - asset: assets/fonts/HWYGNRRW.TTF
+    - family: HighwayGothicGDE
+      fonts:
+        - asset: assets/fonts/HWYGWDE.TTF
+
+  assets:
+    - assets/images/
+    - assets/fonts/
+    - assets/icons/
