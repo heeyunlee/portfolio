@@ -1,12 +1,17 @@
 import 'dart:ui';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:web_app/footer_widget.dart';
 
 import 'constants.dart';
+
+const _linkedInUrl = 'https://www.linkedin.com/in/heeyunlee/';
+const _githubUrl = 'https://github.com/heeyunlee';
+const _emailUrl = 'mailto:info@heeyunlee.com';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,50 +19,68 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  AnimationController _animationController;
+  // AnimationController _iconAnimationController;
+  // bool _isMenuOpened = false;
 
-  bool isMenuOpened = false;
-  double eighthLayerPosition = 0;
-  double seventhLayerPosition = -300;
-  double sixthLayerPosition = -150;
-  double fifthLayerPosition = -140;
-  double fourthLayerPosition = -130;
-  double thirdLayerPosition = -120;
-  double secondLayerPosition = -110;
-  double firstLayerPosition = -100;
+  AnimationController _colorAnimationController;
+  AnimationController _textAnimationController;
 
-  double textPosition = 40;
+  Animation _colorTween;
+  Animation<Offset> _transTween;
 
-  final items = List<String>.generate(10, (i) => "Item $i");
+  double firstLayerPosition = 200;
+  double secondLayerPosition = 200;
+  double thirdLayerPosition = 220;
+  double fourthLayerPosition = 320;
+  double fifthLayerPosition = 300;
+
+  double textPosition = 200;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
+    _colorAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: Duration(seconds: 0),
     );
+    _textAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 0),
+    );
+
+    _colorTween = ColorTween(begin: Colors.transparent, end: AppBarColor)
+        .animate(_colorAnimationController);
+    _transTween = Tween(begin: Offset(0, -40), end: Offset(0, 0))
+        .animate(_textAnimationController);
+    // _iconAnimationController = AnimationController(
+    //   vsync: this,
+    //   duration: const Duration(milliseconds: 150),
+    // );
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _colorAnimationController.dispose();
+    _textAnimationController.dispose();
+    // _iconAnimationController.dispose();
     super.dispose();
   }
 
   bool _scrollListener(ScrollNotification scrollNotifier) {
     if (scrollNotifier is ScrollUpdateNotification) {
+      _colorAnimationController
+          .animateTo((scrollNotifier.metrics.pixels - 800) / 50);
+      _textAnimationController
+          .animateTo((scrollNotifier.metrics.pixels - 800) / 50);
+
       final delta = scrollNotifier.scrollDelta;
 
       setState(() {
-        eighthLayerPosition -= delta / 7;
-        seventhLayerPosition -= delta / 4;
-        sixthLayerPosition -= delta / 3.5;
-        fifthLayerPosition -= delta / 3;
-        fourthLayerPosition -= delta / 2.5;
-        thirdLayerPosition -= delta / 2;
-        secondLayerPosition -= delta / 1.5;
         firstLayerPosition -= delta / 1;
+        secondLayerPosition -= delta / 1.5;
+        thirdLayerPosition -= delta / 2;
+        fourthLayerPosition -= delta / 2.5;
+        fifthLayerPosition -= delta / 3;
 
         textPosition -= delta / 6;
       });
@@ -71,6 +94,58 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(48),
+        child: AnimatedBuilder(
+          animation: _colorAnimationController,
+          builder: (context, child) => AppBar(
+            backgroundColor: _colorTween.value,
+            elevation: 0,
+            centerTitle: true,
+            title: Transform.translate(
+              offset: _transTween.value,
+              child: const Text('Heeyun Lee', style: Subtitle1),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () => launch(_linkedInUrl),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent,
+                  elevation: 0,
+                ),
+                child: SvgPicture.asset(
+                  'assets/icons/linkedIn.svg',
+                  width: 24,
+                  height: 24,
+                  color: Colors.white,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => launch(_githubUrl),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent,
+                  elevation: 0,
+                ),
+                child: SvgPicture.asset(
+                  'assets/icons/github.svg',
+                  width: 24,
+                  height: 24,
+                  color: Colors.white,
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.transparent,
+                  elevation: 0,
+                ),
+                child: FaIcon(FontAwesomeIcons.envelope, color: Colors.white),
+                onPressed: () => launch(_emailUrl),
+              ),
+              const SizedBox(width: 16),
+            ],
+          ),
+        ),
+      ),
       backgroundColor: BackgroundColor,
       body: NotificationListener<ScrollNotification>(
         onNotification: _scrollListener,
@@ -82,90 +157,60 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     begin: Alignment.topRight,
                     end: Alignment.topLeft,
                     colors: [
-                      Color(0xff64c4f4),
-                      Color(0xffbcd4dc),
+                      Color(0xffF9E0BB),
+                      Color(0xffF0B051),
                     ]),
               ),
             ),
             Positioned(
-              top: eighthLayerPosition,
-              right: -170,
-              child: SvgPicture.asset(
-                'assets/images/clouds.svg',
-                // width: size.width,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              right: size.width / 8,
               top: textPosition,
+              left: size.width / 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('Hello, I\'m', style: Headline5Black),
                   const Text('Heeyun Lee', style: Headline4Black),
                   const SizedBox(height: 16),
-                  const SizedBox(
-                    width: 250,
-                    child: Text(
-                      'I\'m a student who likes to learn new things and build amazing stuff. \n\nOnly recently I\'ve discovered Flutter, but I\'ve been having so much fun learning and building new things',
-                      style: Headline6Black,
-                    ),
+                  const Text(
+                    'Flutter Developer,\nFinance and business analytics student.',
+                    style: Headline6Black,
                   ),
                 ],
               ),
             ),
             Positioned(
-              top: seventhLayerPosition,
-              child: SvgPicture.asset(
-                'assets/images/7th_layer.svg',
-                width: size.width,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Positioned(
-              top: sixthLayerPosition,
+              top: 0,
               child: SvgPicture.asset(
                 'assets/images/6th_layer.svg',
-                width: size.width,
-                fit: BoxFit.cover,
-                color: Colors.blueGrey[300],
+                width: size.width * 1.5,
               ),
             ),
             Positioned(
               top: fifthLayerPosition,
               child: SvgPicture.asset(
                 'assets/images/5th_layer.svg',
-                width: size.width,
-                fit: BoxFit.cover,
-                color: Colors.blueGrey[400],
+                width: size.width * 1.02,
               ),
             ),
             Positioned(
               top: fourthLayerPosition,
               child: SvgPicture.asset(
                 'assets/images/4th_layer.svg',
-                width: size.width,
-                fit: BoxFit.cover,
-                color: Colors.blueGrey[500],
+                width: size.width * 1.02,
               ),
             ),
             Positioned(
               top: thirdLayerPosition,
               child: SvgPicture.asset(
                 'assets/images/3rd_layer.svg',
-                width: size.width,
-                fit: BoxFit.cover,
-                color: Colors.blueGrey[700],
+                width: size.width * 1.02,
               ),
             ),
             Positioned(
               top: secondLayerPosition,
               child: SvgPicture.asset(
                 'assets/images/2nd_layer.svg',
-                width: size.width,
-                fit: BoxFit.cover,
-                color: Colors.blueGrey[800],
+                width: size.width * 1.02,
               ),
             ),
             Positioned(
@@ -173,8 +218,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: SvgPicture.asset(
                 'assets/images/1st_layer.svg',
                 width: size.width,
-                fit: BoxFit.cover,
-                color: Colors.blueGrey[900],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 8,
+              child: Text(
+                'Illustration by Terd486 and axellwolf from Adobe Stock',
+                style: Caption1,
               ),
             ),
             ListView(
@@ -184,16 +235,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   color: Colors.transparent,
                 ),
                 Container(
-                  color: Colors.blueGrey[900],
+                  // color: Colors.blueGrey[900],
+                  color: Colors.black,
                   height: 4000,
                   child: Padding(
                     padding: EdgeInsets.all(size.width / 15),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('About Me', style: Headline4Condensed),
-                        SizedBox(height: 24),
-                        Text(
+                        const Text('About Me', style: Headline4Condensed),
+                        const SizedBox(height: 24),
+                        const Text(
                           'I\'m a self-taught Flutter Developer, currently stuyding Finance and Business Analytics at Pace University.',
                           style: Headline6Grey,
                         ),

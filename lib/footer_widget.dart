@@ -56,7 +56,7 @@ class FooterWidget extends StatelessWidget {
                 ),
                 child: FaIcon(FontAwesomeIcons.envelope, color: Colors.white),
                 onPressed: () => launch(_emailUrl),
-              )
+              ),
             ],
           ),
         ],
