@@ -1,17 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:web_app/footer_widget.dart';
 
 import 'constants.dart';
 
 const _linkedInUrl = 'https://www.linkedin.com/in/heeyunlee/';
 const _githubUrl = 'https://github.com/heeyunlee';
 const _emailUrl = 'mailto:info@heeyunlee.com';
+const _heraklessUrl = 'https://www.nextsportif.com/';
 
 class HomePage extends StatefulWidget {
   @override
@@ -252,54 +251,46 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         SizedBox(height: 48),
                         Text('Projects', style: Headline4Condensed),
                         SizedBox(height: 24),
-                        StaggeredGridView.countBuilder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          crossAxisCount: 4,
-                          itemCount: 8,
-                          itemBuilder: (BuildContext context, int index) =>
-                              new Container(
-                                  color: Colors.green,
-                                  child: new Center(
-                                    child: new CircleAvatar(
-                                      backgroundColor: Colors.white,
-                                      child: new Text('$index'),
-                                    ),
-                                  )),
-                          staggeredTileBuilder: (int index) =>
-                              new StaggeredTile.count(2, index.isEven ? 2 : 1),
-                          mainAxisSpacing: 4.0,
-                          crossAxisSpacing: 4.0,
+
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('HēraKless', style: Headline3),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Workout Tracking Application',
+                                  style: Headline6Grey,
+                                ),
+                              ],
+                            ),
+                            Spacer(),
+                            InkWell(
+                              onTap: () => launch(_heraklessUrl),
+                              onHover: (hovering) {
+                                print('hovering is $hovering');
+                              },
+                              child: SizedBox(
+                                width: size.width / 2,
+                                height: 400,
+                                child: Card(
+                                  elevation: 6,
+                                  color: Colors.deepPurple,
+                                  clipBehavior: Clip.antiAlias,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/project_preview.png',
+                                    fit: BoxFit.fitWidth,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        // Row(
-                        //   children: [
-                        //     Column(
-                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                        //       mainAxisAlignment: MainAxisAlignment.center,
-                        //       children: [
-                        //         Text('PLAYER H', style: Headline3),
-                        //         SizedBox(height: 8),
-                        //         Text(
-                        //           'Workout Tracking Application',
-                        //           style: Headline6Grey,
-                        //         ),
-                        //       ],
-                        //     ),
-                        //     Spacer(),
-                        //     SizedBox(
-                        //       width: size.width / 2,
-                        //       height: 400,
-                        //       child: Card(
-                        //         elevation: 6,
-                        //         color: Colors.deepPurple,
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(15),
-                        //         ),
-                        //         child: Text('asda'),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         // SizedBox(
                         //   height: 40,
                         //   width: 160,
@@ -331,7 +322,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         // ),
                         Spacer(),
                         // const SizedBox(height: 48),
-                        FooterWidget(),
+                        // FooterWidget(),
                       ],
                     ),
                   ),
